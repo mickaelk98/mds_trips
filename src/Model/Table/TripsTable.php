@@ -39,24 +39,29 @@ class TripsTable extends Table
      * @return void
      */
     public function initialize(array $config): void
-    {
-        parent::initialize($config);
+{
+    parent::initialize($config);
 
-        $this->setTable('trips');
-        $this->setDisplayField('title');
-        $this->setPrimaryKey('id');
+    $this->setTable('trips');
+    $this->setDisplayField('title');
+    $this->setPrimaryKey('id');
 
-        $this->addBehavior('Timestamp');
+    $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Users', [
-            'foreignKey' => 'user_id',
-            'joinType' => 'INNER',
-        ]);
-        $this->belongsTo('Cities', [
-            'foreignKey' => 'city_id',
-            'joinType' => 'INNER',
-        ]);
-    }
+    // Relation N:1 => un trip est créé par un utilisateur
+    $this->belongsTo('Users', [
+        'foreignKey' => 'user_id',
+        'joinType' => 'INNER',
+    ]);
+
+    // Relation N:N => un trip peut avoir plusieurs villes
+    $this->belongsToMany('Cities', [
+        'joinTable' => 'trips_cities',
+        'foreignKey' => 'trips_id',
+        'targetForeignKey' => 'cities_id',
+    ]);
+}
+
 
     /**
      * Default validation rules.
@@ -91,10 +96,11 @@ class TripsTable extends Table
      * @return \Cake\ORM\RulesChecker
      */
     public function buildRules(RulesChecker $rules): RulesChecker
-    {
-        $rules->add($rules->existsIn(['user_id'], 'Users'), ['errorField' => 'user_id']);
-        $rules->add($rules->existsIn(['city_id'], 'Cities'), ['errorField' => 'city_id']);
+{
+    // On ne conserve que la validation pour user_id (puisque city_id n’existe plus).
+    $rules->add($rules->existsIn(['user_id'], 'Users'), ['errorField' => 'user_id']);
 
-        return $rules;
-    }
+    return $rules;
+}
+
 }

@@ -40,17 +40,21 @@ class CitiesTable extends Table
     public function initialize(array $config): void
     {
         parent::initialize($config);
-
+    
         $this->setTable('cities');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
-
+    
         $this->addBehavior('Timestamp');
-
-        $this->hasMany('Trips', [
-            'foreignKey' => 'city_id',
+    
+        // Relation N:N => une ville peut appartenir à plusieurs trips
+        $this->belongsToMany('Trips', [
+            'joinTable' => 'trips_cities',
+            'foreignKey' => 'cities_id',
+            'targetForeignKey' => 'trips_id',
         ]);
     }
+    
 
     /**
      * Default validation rules.

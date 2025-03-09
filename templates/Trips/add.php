@@ -15,6 +15,7 @@
     </aside>
     <div class="column column-80">
         <div class="trips form content">
+            
             <?= $this->Form->create($trip) ?>
             <fieldset>
                 <legend><?= __('Add Trip') ?></legend>

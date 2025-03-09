@@ -13,7 +13,7 @@ class TripsController extends AppController
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         parent::beforeFilter($event);
-        $this->Authentication->allowUnauthenticated(['index', 'view']);
+        $this->Authentication->allowUnauthenticated(['index']);
     }
 
     /**
